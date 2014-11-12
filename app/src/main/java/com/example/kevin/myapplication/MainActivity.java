@@ -3,6 +3,7 @@ package com.example.kevin.myapplication;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,13 +19,43 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        try {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         // Initialize database
         db = new DBHelper(this);
         // Retrieve data
-        ArrayList data_list = db.getAllData();
+        db.insertNotesRecord(new Notes(1, "10:00", "Some note", "12:50"));
+        db.insertSettingsRecord(new Settings("Some key", "Some value"));
+        db.insertActionLogRecord(new ActionLog(1, "Some action", "11:00", "12:52"));
+
+        // Read from each Table for testing
+        for(Notes notes : db.getNotesRecord()) {
+            Log.i("Table Name " , "notes");
+            Log.i("Videold " , notes.getVideold() + "");
+            Log.i("Time " , notes.getTime());
+            Log.i("Note " , notes.getNote());
+            Log.i("Sent " , notes.getSent());
+        }
+
+        for(Settings settings : db.getSettingsRecord()) {
+            Log.i("Table Name " , "settings");
+            Log.i("Key " , settings.getKey());
+            Log.i("Value " , settings.getValue());
+        }
+
+        for(ActionLog actionlog : db.getActionLogRecord()) {
+            Log.i("Table Name " , "action log");
+            Log.i("Videold " , actionlog.getVideold() + "");
+            Log.i("ActionType " , actionlog.getActiontype());
+            Log.i("Time " , actionlog.getTime());
+            Log.i("Sent " , actionlog.getSent());
+        }
+
+        } catch(Exception e){
+            Log.d("SQLiteActivity", Log.getStackTraceString(e));
+        }
 
         // TODO: Create appropriate layout to display data via ArrayAdapter
 
