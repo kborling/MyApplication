@@ -105,8 +105,7 @@ public class DBHelper extends SQLiteOpenHelper {
     } // End onUpgrade
 
 
-
-
+    /* Table CRUD Methods */
 
     public String insertNotesRecord(Notes notes) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -166,10 +165,11 @@ public class DBHelper extends SQLiteOpenHelper {
         return record;
     } // End getNotesRecord
 
-
-
-
-
+    //TODO: Verify primary key
+    public void deleteNotes(int videold) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_NOTES, NOTES_COLUMN_VIDEOLD + " = " + videold, null);
+    } // End deleteNotes
 
     public String insertSettingsRecord(Settings settings) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -224,6 +224,12 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return record;
     } // End getSettingsRecord
+
+    //TODO: Verify primary key
+    public void deleteSettings(String key) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_SETTINGS, SETTINGS_COLUMN_KEY + " = " + key, null);
+    } // End deleteSettings
 
     public String insertActionLogRecord(ActionLog actionlog) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -282,6 +288,11 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return record;
     } // End getActionLogRecord
+    //TODO: Verify primary key
+    public void deleteActionLog(int videold) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_ACTION_LOG, ACTION_LOG_COLUMN_VIDEOLD + " = " + videold, null);
+    } // End deleteActionLog
 
 
 
