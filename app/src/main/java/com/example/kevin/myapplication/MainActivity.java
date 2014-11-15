@@ -29,6 +29,7 @@ public class MainActivity extends Activity {
 
         // Initialize database
         db = new DBHelper(this);
+
         // Retrieve data
         db.insertNotesRecord(new Notes(554, 1, "10:00", "Some note", "12:50"));
         db.insertSettingsRecord(new Settings("Some key", "Some value"));
