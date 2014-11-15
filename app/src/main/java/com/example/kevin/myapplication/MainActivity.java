@@ -11,8 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import java.util.ArrayList;
-
 
 public class MainActivity extends Activity {
 
@@ -40,7 +38,7 @@ public class MainActivity extends Activity {
         // Read from each Table for testing
         for(Notes notes : db.getNotesRecord()) {
             Log.i("Table Name " , "notes");
-            Log.i("AutoIncrement " , notes.getAutoincrement() + "");
+            Log.i("AutoIncrement " , notes.getRn() + "");
             Log.i("Videold " , notes.getVideold() + "");
             Log.i("Time " , notes.getTime());
             Log.i("Note " , notes.getNote());
@@ -55,7 +53,7 @@ public class MainActivity extends Activity {
 
         for(ActionLog actionlog : db.getActionLogRecord()) {
             Log.i("Table Name " , "action log");
-            Log.i("AutoIncrement " , actionlog.getAutoincrement() + "");
+            Log.i("AutoIncrement " , actionlog.getRn() + "");
             Log.i("Videold " , actionlog.getVideold() + "");
             Log.i("ActionType " , actionlog.getActiontype());
             Log.i("Time " , actionlog.getTime());

@@ -5,7 +5,7 @@ package com.example.kevin.myapplication;
  */
 public class Notes {
 
-    private int autoincrement;
+    private int rn;
     private int videold;
     private String time;
     private String note;
@@ -13,20 +13,21 @@ public class Notes {
 
     public Notes(){} // End DVC
 
-    public Notes (int autoincrement, int videold, String time, String note, String sent) {
+    public Notes (int rn, int videold, String time, String note, String sent) {
+        this.setRn(rn);
         this.setVideold(videold);
         this.setTime(time);
         this.setNote(note);
         this.setSent(sent);
     } // End EVC
 
-    public int getAutoincrement() {
-        return autoincrement;
-    } // End getAutoincrement
+    public int getRn() {
+        return rn;
+    } // End getRn
 
-    public void setAutoincrement(int autoincrement) {
-        this.autoincrement = autoincrement;
-    } // End setAutoincrement
+    public void setRn(int rn) {
+        this.rn = rn;
+    } // End setRn
 
     public int getVideold() {
         return videold;

@@ -29,7 +29,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String NOTES_COLUMN_TIME = "Time";
     private static final String NOTES_COLUMN_NOTE = "Note";
     private static final String NOTES_COLUMN_SENT = "Sent";
-    private static final String NOTES_COLUMN_AUTO_INCREMENT = "AUTO_INCREMENT";
+    private static final String NOTES_COLUMN_RN = "RN";
     // Settings Columns
     private static final String SETTINGS_COLUMN_KEY = "Key";
     private static final String SETTINGS_COLUMN_VALUE = "Value";
@@ -38,7 +38,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String ACTION_LOG_COLUMN_ACTIONTYPE = "ActionType";
     private static final String ACTION_LOG_COLUMN_TIME = "Time";
     private static final String ACTION_LOG_COLUMN_SENT = "Sent";
-    private static final String ACTION_LOG_COLUMN_AUTO_INCREMENT = "AUTO_INCREMENT";
+    private static final String ACTION_LOG_COLUMN_RN = "RN";
     // Note Tags Columns
     private static final String NOTE_TAGS_COLUMN_NOTE_ID = "note_id";
     private static final String NOTE_TAGS_COLUMN_TAG = "tag";
@@ -57,7 +57,7 @@ public class DBHelper extends SQLiteOpenHelper {
         try {
         db.execSQL(
                 "CREATE TABLE " + TABLE_NOTES +
-                        "(" + NOTES_COLUMN_AUTO_INCREMENT + " INTEGER PRIMARY KEY," + NOTES_COLUMN_VIDEOLD + " INTEGER," + NOTES_COLUMN_TIME + " INTEGER," + NOTES_COLUMN_NOTE + " TEXT," + NOTES_COLUMN_SENT + " TEXT)"
+                        "(" + NOTES_COLUMN_RN + " INTEGER PRIMARY KEY AUTOINCREMENT," + NOTES_COLUMN_VIDEOLD + " INTEGER," + NOTES_COLUMN_TIME + " INTEGER," + NOTES_COLUMN_NOTE + " TEXT," + NOTES_COLUMN_SENT + " TEXT)"
         );
         db.execSQL(
                 "CREATE TABLE " + TABLE_SETTINGS +
@@ -65,7 +65,7 @@ public class DBHelper extends SQLiteOpenHelper {
         );
         db.execSQL(
                 "CREATE TABLE " + TABLE_ACTION_LOG +
-                        "(" + ACTION_LOG_COLUMN_AUTO_INCREMENT + " INTEGER PRIMARY KEY," + ACTION_LOG_COLUMN_VIDEOLD + " INTEGER," + ACTION_LOG_COLUMN_ACTIONTYPE + " INTEGER," + ACTION_LOG_COLUMN_TIME + " INTEGER," + ACTION_LOG_COLUMN_SENT + " TEXT)"
+                        "(" + ACTION_LOG_COLUMN_RN + " INTEGER PRIMARY KEY AUTOINCREMENT," + ACTION_LOG_COLUMN_VIDEOLD + " INTEGER," + ACTION_LOG_COLUMN_ACTIONTYPE + " INTEGER," + ACTION_LOG_COLUMN_TIME + " INTEGER," + ACTION_LOG_COLUMN_SENT + " TEXT)"
         );
         db.execSQL(
                 "CREATE TABLE " + TABLE_NOTE_TAGS +
@@ -116,6 +116,7 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         try {
             ContentValues values = new ContentValues();
+            values.put(NOTES_COLUMN_RN, notes.getRn());
             values.put(NOTES_COLUMN_VIDEOLD, notes.getVideold());
             values.put(NOTES_COLUMN_TIME, notes.getTime());
             values.put(NOTES_COLUMN_NOTE, notes.getNote());
@@ -148,10 +149,11 @@ public class DBHelper extends SQLiteOpenHelper {
                 do {
 
                     Notes notes = new Notes();
-                    notes.setVideold(cursor.getInt(0));
-                    notes.setTime(cursor.getString(1));
-                    notes.setNote(cursor.getString(2));
-                    notes.setSent(cursor.getString(3));
+                    notes.setRn(cursor.getInt(0));
+                    notes.setVideold(cursor.getInt(1));
+                    notes.setTime(cursor.getString(2));
+                    notes.setNote(cursor.getString(3));
+                    notes.setSent(cursor.getString(4));
 
                     record.add(notes);
 
@@ -172,7 +174,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public void deleteNotes(int key) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_NOTES, NOTES_COLUMN_AUTO_INCREMENT + " = " + key, null);
+        db.delete(TABLE_NOTES, NOTES_COLUMN_RN + " = " + key, null);
     } // End deleteNotes
 
     /* Settings */
@@ -243,6 +245,7 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         try {
             ContentValues values = new ContentValues();
+            values.put(ACTION_LOG_COLUMN_RN, actionlog.getRn());
             values.put(ACTION_LOG_COLUMN_VIDEOLD, actionlog.getVideold());
             values.put(ACTION_LOG_COLUMN_ACTIONTYPE, actionlog.getActiontype());
             values.put(ACTION_LOG_COLUMN_TIME, actionlog.getTime());
@@ -275,10 +278,11 @@ public class DBHelper extends SQLiteOpenHelper {
                 do {
 
                     ActionLog actionlog = new ActionLog();
-                    actionlog.setVideold(cursor.getInt(0));
-                    actionlog.setActiontype(cursor.getString(1));
-                    actionlog.setTime(cursor.getString(2));
-                    actionlog.setSent(cursor.getString(3));
+                    actionlog.setRn(cursor.getInt(0));
+                    actionlog.setVideold(cursor.getInt(1));
+                    actionlog.setActiontype(cursor.getString(2));
+                    actionlog.setTime(cursor.getString(3));
+                    actionlog.setSent(cursor.getString(4));
 
                     record.add(actionlog);
 
@@ -299,7 +303,7 @@ public class DBHelper extends SQLiteOpenHelper {
     //TODO: Verify primary key
     public void deleteActionLog(int key) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_ACTION_LOG, ACTION_LOG_COLUMN_VIDEOLD + " = " + key, null);
+        db.delete(TABLE_ACTION_LOG, ACTION_LOG_COLUMN_RN + " = " + key, null);
     } // End deleteActionLog
 
 

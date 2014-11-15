@@ -5,7 +5,7 @@ package com.example.kevin.myapplication;
  */
 public class ActionLog {
 
-    private int autoincrement;
+    private int rn;
     private int videold;
     private String actiontype;
     private String time;
@@ -13,21 +13,21 @@ public class ActionLog {
 
     public ActionLog() {} // End DVC
 
-    public ActionLog(int autoincrement, int videold, String actiontype, String time, String sent) {
-        this.setAutoincrement(autoincrement);
+    public ActionLog(int rn, int videold, String actiontype, String time, String sent) {
+        this.setRn(rn);
         this.setVideold(videold);
         this.setActiontype(actiontype);
         this.setTime(time);
         this.setSent(sent);
     } // End EVC
 
-    public int getAutoincrement() {
-        return autoincrement;
-    } // End getAutoincrement
+    public int getRn() {
+        return rn;
+    } // End getRn
 
-    public void setAutoincrement(int autoincrement) {
-        this.autoincrement = autoincrement;
-    } // End setAutoincrement
+    public void setRn(int rn) {
+        this.rn = rn;
+    } // End setRn
 
     public int getVideold() {
         return videold;
