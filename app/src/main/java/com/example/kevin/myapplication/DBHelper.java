@@ -3,7 +3,6 @@ package com.example.kevin.myapplication;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -24,11 +23,13 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String TABLE_NOTES = "notes";
     private static final String TABLE_SETTINGS = "settings";
     private static final String TABLE_ACTION_LOG = "action_log";
+    private static final String TABLE_NOTE_TAGS = "note_tags";
     // Notes Columns
     private static final String NOTES_COLUMN_VIDEOLD = "Videold";
     private static final String NOTES_COLUMN_TIME = "Time";
     private static final String NOTES_COLUMN_NOTE = "Note";
     private static final String NOTES_COLUMN_SENT = "Sent";
+    private static final String NOTES_COLUMN_AUTO_INCREMENT = "AUTO_INCREMENT";
     // Settings Columns
     private static final String SETTINGS_COLUMN_KEY = "Key";
     private static final String SETTINGS_COLUMN_VALUE = "Value";
@@ -37,14 +38,10 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String ACTION_LOG_COLUMN_ACTIONTYPE = "ActionType";
     private static final String ACTION_LOG_COLUMN_TIME = "Time";
     private static final String ACTION_LOG_COLUMN_SENT = "Sent";
-
-    private static DBHelper instance;
-
-    public static synchronized DBHelper getHelper(Context context) {
-        if (instance == null)
-            instance = new DBHelper(context);
-        return instance;
-    } // End getHelper
+    private static final String ACTION_LOG_COLUMN_AUTO_INCREMENT = "AUTO_INCREMENT";
+    // Note Tags Columns
+    private static final String NOTE_TAGS_COLUMN_NOTE_ID = "note_id";
+    private static final String NOTE_TAGS_COLUMN_TAG = "tag";
 
     public DBHelper(Context context) {
         super(context, DB_NAME, null, DATABASE_VERSION);
@@ -60,7 +57,7 @@ public class DBHelper extends SQLiteOpenHelper {
         try {
         db.execSQL(
                 "CREATE TABLE " + TABLE_NOTES +
-                        "(" + NOTES_COLUMN_VIDEOLD + " INTEGER," + NOTES_COLUMN_TIME + " INTEGER," + NOTES_COLUMN_NOTE + " TEXT," + NOTES_COLUMN_SENT + " TEXT)"
+                        "(" + NOTES_COLUMN_AUTO_INCREMENT + " INTEGER PRIMARY KEY," + NOTES_COLUMN_VIDEOLD + " INTEGER," + NOTES_COLUMN_TIME + " INTEGER," + NOTES_COLUMN_NOTE + " TEXT," + NOTES_COLUMN_SENT + " TEXT)"
         );
         db.execSQL(
                 "CREATE TABLE " + TABLE_SETTINGS +
@@ -68,14 +65,18 @@ public class DBHelper extends SQLiteOpenHelper {
         );
         db.execSQL(
                 "CREATE TABLE " + TABLE_ACTION_LOG +
-                        "(" + ACTION_LOG_COLUMN_VIDEOLD + " INTEGER," + ACTION_LOG_COLUMN_ACTIONTYPE + " INTEGER," + ACTION_LOG_COLUMN_TIME + " INTEGER," + ACTION_LOG_COLUMN_SENT + " TEXT)"
+                        "(" + ACTION_LOG_COLUMN_AUTO_INCREMENT + " INTEGER PRIMARY KEY," + ACTION_LOG_COLUMN_VIDEOLD + " INTEGER," + ACTION_LOG_COLUMN_ACTIONTYPE + " INTEGER," + ACTION_LOG_COLUMN_TIME + " INTEGER," + ACTION_LOG_COLUMN_SENT + " TEXT)"
+        );
+        db.execSQL(
+                "CREATE TABLE " + TABLE_NOTE_TAGS +
+                        "(" + NOTE_TAGS_COLUMN_NOTE_ID + " INTEGER PRIMARY KEY," + NOTE_TAGS_COLUMN_TAG + " TEXT)"
         );
 
         } catch (SQLException se) {
-            Log.v("DatabaseHandler Oncreate SQLException",
+            Log.v("DatabaseHandler OnCreate SQLException",
             Log.getStackTraceString(se));
         } catch (Exception e) {
-            Log.v("DatabaseHandler Oncreate Exception",
+            Log.v("DatabaseHandler OnCreate Exception",
             Log.getStackTraceString(e));
         }
     } // End onCreate
@@ -93,6 +94,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NOTES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_SETTINGS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ACTION_LOG);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NOTE_TAGS);
         onCreate(db);
 
         } catch (SQLException se) {
@@ -106,6 +108,9 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
     /* Table CRUD Methods */
+
+
+    /* Notes */
 
     public String insertNotesRecord(Notes notes) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -165,11 +170,12 @@ public class DBHelper extends SQLiteOpenHelper {
         return record;
     } // End getNotesRecord
 
-    //TODO: Verify primary key
-    public void deleteNotes(int videold) {
+    public void deleteNotes(int key) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_NOTES, NOTES_COLUMN_VIDEOLD + " = " + videold, null);
+        db.delete(TABLE_NOTES, NOTES_COLUMN_AUTO_INCREMENT + " = " + key, null);
     } // End deleteNotes
+
+    /* Settings */
 
     public String insertSettingsRecord(Settings settings) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -231,6 +237,8 @@ public class DBHelper extends SQLiteOpenHelper {
         db.delete(TABLE_SETTINGS, SETTINGS_COLUMN_KEY + " = " + key, null);
     } // End deleteSettings
 
+    /* Action Log */
+
     public String insertActionLogRecord(ActionLog actionlog) {
         SQLiteDatabase db = this.getWritableDatabase();
         try {
@@ -289,11 +297,72 @@ public class DBHelper extends SQLiteOpenHelper {
         return record;
     } // End getActionLogRecord
     //TODO: Verify primary key
-    public void deleteActionLog(int videold) {
+    public void deleteActionLog(int key) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_ACTION_LOG, ACTION_LOG_COLUMN_VIDEOLD + " = " + videold, null);
+        db.delete(TABLE_ACTION_LOG, ACTION_LOG_COLUMN_VIDEOLD + " = " + key, null);
     } // End deleteActionLog
 
 
+    /* Note Tags */
+
+    public String insertNoteTagsRecord(NoteTags notetags) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+            ContentValues values = new ContentValues();
+            values.put(NOTE_TAGS_COLUMN_NOTE_ID, notetags.getNote_id());
+            values.put(NOTE_TAGS_COLUMN_TAG, notetags.getTag());
+
+
+            db.insert(TABLE_NOTE_TAGS, null, values);
+            db.close();
+
+            return "Record inserted into Note Tags Table successfully..";
+        } catch (SQLiteException se) {
+            Log.v("DatabaseHandler insertNoteTagsRecord Exception",
+                    Log.getStackTraceString(se));
+            return se.getMessage();
+        } catch (Exception e) {
+            Log.v("DatabaseHandler insertNoteTagsRecord Exception",
+                    Log.getStackTraceString(e));
+            return e.getMessage();
+        } finally {
+            db.close();
+        }
+    } // End insertActionLogRecord
+
+    public ArrayList<NoteTags> getNoteTagsRecord() {
+        ArrayList<NoteTags> record = new ArrayList<NoteTags>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        try {
+            String selectQuery = "SELECT * FROM " + TABLE_NOTE_TAGS;
+            Cursor cursor = db.rawQuery(selectQuery, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+
+                    NoteTags notetags = new NoteTags();
+                    notetags.setNote_id(cursor.getInt(0));
+                    notetags.setTag(cursor.getString(1));
+
+                    record.add(notetags);
+
+                } while (cursor.moveToNext());
+            }
+            return record;
+        } catch (SQLiteException se) {
+            Log.v("DatabaseHandler getNoteTagsRecord Exception",
+                    Log.getStackTraceString(se));
+        } catch (Exception e) {
+            Log.v("DatabaseHandler getNoteTagsRecord Exception",
+                    Log.getStackTraceString(e));
+        } finally {
+            db.close();
+        }
+        return record;
+    } // End getActionLogRecord
+
+    public void deleteNoteTags(int key) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_NOTE_TAGS, NOTE_TAGS_COLUMN_NOTE_ID + " = " + key, null);
+    } // End deleteActionLog
 
 } // End DBHelper
