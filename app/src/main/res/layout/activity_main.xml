@@ -7,7 +7,7 @@
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="413dp"
-        android:id="@+id/listView"
+        android:id="@+id/dblistView"
         android:layout_gravity="center_horizontal|bottom" />
 
     <Button
@@ -15,12 +15,14 @@
         android:layout_height="wrap_content"
         android:text="Add Data"
         android:id="@+id/add"
-        android:layout_gravity="left|top" />
+        android:layout_gravity="left|top"
+        android:clickable="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Clear Data"
         android:id="@+id/clear"
-        android:layout_gravity="center_horizontal|top" />
+        android:layout_gravity="center_horizontal|top"
+        android:clickable="true" />
 </FrameLayout>

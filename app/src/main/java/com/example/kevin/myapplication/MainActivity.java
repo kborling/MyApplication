@@ -81,6 +81,13 @@ public class MainActivity extends Activity {
 
     } // End onCreate
 
+    private void onClick_AddRecord(View v) {
+
+        db.insertNotesRecord(new Notes(444, 2, "12:00", "Some notes", "12:52"));
+    }
+
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
